@@ -1,0 +1,85 @@
+Cipolla showed in his 1902 paper that there exists a sequence $(P_m), \ m\geq 1,$ of polynomials with integer coefficients such
+that, for any integer $m$,
+
+$$p_n=n\bigg[\log n + \log\log n -1+\sum_{j=1}^{m}\frac{(-1)^{j-1}P_j (\log \log n)}{\log ^j n}+o\left(\frac{1}{\log^m n}\right)\bigg]$$
+
+where $p_n$ is the $n$th prime, where the first few polynomials $P_j$ are:
+
+$
+\begin{align}
+P_2(X)=&\  (X^2-6X+11)\color{red}{/2!}\\
+P_3(X)=&\ (2X^3 − 21X^2 + 84X − 131)\color{red}{/3!}\\
+P_4(X)=&\  (6X^4 − 92X^3 + 588X^2 − 1908X + 2666)\color{red}{/4!}\\
+\vdots& \\
+\end{align}
+$
+
+as reiterated in section $5$ in [this paper](http://www.emis.de/journals/JIPAM/images/153_02_JIPAM/153_02.pdf) $($*though I believe the first equation should read* $P^\prime_k=k(k-1)P_{k-1}\color{red}{\bf{-}} P^\prime_{k-1}k,\quad $ *as opposed to* $\color{red}{\bf{+}}.$ *Also note that in the above paper, the polynomials don't include the* $\color{red}{/j!}$ *term* $).$
+
+------
+
+Now, if $y=n/\log n, \ n=-y\ W_{-1}(-1/y)$, and if $y=n/(\log n-1), \ n=-y\ W_{-1}(-e/y).$ A heuristic argument might follow that since $n/(\log n-1)$ is a better approximation of $\pi (n)$ than $n/\log n$ ,$-n\ W_{-1}(-e/n)$ should be a better approximation of $p_n$ than $n \log n$.
+
+------
+
+Following on from [my previous question](https://mathoverflow.net/questions/278626/expansion-of-inverse-logarithmic-integral-in-terms-of-lambert-w), it appears that there exists a sequence $Q_m$ of rational coefficients such that, for any integer $m$,
+
+$$p_n=n \left[-W_{-1}\left(-e/n\right)-\sum _{j=1}^m Q_j(W_{-1}\left(-e/n\right){}^{-j})+o\left(\frac{1}{\log^m n}\right)\right]$$
+
+It turns out that the sum of the coefficients of the Cipolla polynomials divided by the corresponding factorial are precisely the coefficients $Q_j.$
+
+*eg*
+
+for $P_2(X)=\  X^2-6X+11,$ the corresponsing coefficient $Q_2=(1-6+11)/2!=3;$ and for $P_3(X)=\  2X^3 − 21X^2 + 84X − 131,$ the corresponsing coefficient $Q_3=(2-21+84-131)/3!=-11.$
+
+The first few terms then are $-1, 3, -11, 105/2, -613/2 \dots$
+
+Why does this work? Is there a simple proof for this, or am I being too optimistic?
+
+I include a few precalculated terms to illustrate:
+
+    fL[n_, wp_] := Quiet[x /. FindRoot[LogIntegral@x == n, {x, N[n Log[n], wp]}, WorkingPrecision -> wp]]; fL[n_] := fL[n, 200];
+    pnwpre[t_, n_] := With[{a = Uncompress["1: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"]}, 
+    n (Sum[-a[[k]] ProductLog[-1, -E/n]^(-k), {k, 1, t}] - ProductLog[-1, -E/n])];
+
+As a side note, it turns out that $\lfloor W_{-1}(-e/n) -2\rfloor$ terms $-e$ appears to be close to optimal:
+
+    Quiet[Plot[{pnwpre[Floor[-ProductLog[-1, -E/n]] - 2 , n] - E - fL[n]}, 
+    {n, 0, Exp[1 + #]/# &[32]}]]
+
+[![enter image description here][1]][1]
+
+Truncated in this way, the approximation should $=\operatorname{li}^{-1}(n)+O (\log n).$
+
+---------
+
+#Calculating the coefficient $Q_j:$
+
+By way of explanation of the above code, `fL` is a numerical `FindRoot` for $\operatorname{li}^{-1}(n)$ and `pnwpre` is a list of precalculated coefficients (since `prw` takes too long). `pnwpre` was calculated with the following:
+
+    Clear[a, b, c, q, r, k, i, j, n, x, cipolla, pnw]
+    a[1, x_] := a[1, x] = x - 2;
+    a[k_, x_] :=  a[k, x] = With[{t = Integrate[Expand@FullSimplify[k (k - 1) a[k - 1, x] - k D[a[k - 1, x], x]], x]}, t + First[List @@ (Quiet[-(k - 1) (Sum[Binomial[(k - 1) - 1, j] a[j, x] (a[k - 1 - j, x] + D[a[k - 1 - j, x], x]), {j, 1, k - 2}] + (a[k - 1, x] + D[a[k - 1, x], x])) - k a[k - 1, x]] // FullSimplify //  Expand)] - (CoefficientList[t, x])[[2]]];
+    b[k_, x_] := a[k, x]/k!;
+    c[k_] := Tr[CoefficientList[b[k, x], x]];
+    cipolla[r_, n_] := n Log[n] + n Log[Log[n]] - n + n Sum[(-1)^(i - 1) b[i, q]/Log[n]^i, {i, 1, r}] /. q -> Log[Log[n]];
+    pnw[t_, n_] := n (Sum[-(c /@ Range@t)[[k]] ProductLog[-1, -E/n]^(-k), {k, 1, t}] 
+    - ProductLog[-1, -E/n]);
+
+*eg* `c /@ Range@7` calculates $Q_1$ to $Q_7.$
+
+***Note***
+
+To calculate larger coefficients, it helps to have the previous polynomial pre-defined / memoized.
+
+*eg*
+
+    a[9, x] := -1293975782352 + 1140641857584 x - 491501715264 x^2 + 136703843136 x^3 - 27182604960 x^4 + 4018300272 x^5 - 441118944 x^6 + 34445664 x^7 - 1712016 x^8 + 40320 x^9;
+    a[10, x] 
+    Total[CoefficientList[%, x]/10!]
+
+is far faster than `c[10]`.
+
+[The first 80 Cipolla polynomials.](https://github.com/martinq321/cipolla/blob/master/polynomials)
+
+  [1]: https://i.stack.imgur.com/KQPuP.png
